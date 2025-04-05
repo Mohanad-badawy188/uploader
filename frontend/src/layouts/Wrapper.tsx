@@ -15,7 +15,7 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <AuthLoader>
       <NotificationProvider>
-        <div className="flex flex-col h-screen bg-white">
+        <div className="flex flex-col h-screen bg-white mb-10">
           <div className="flex min-h-0 flex-1">
             <Sidebar />
             <div className="flex flex-col flex-1 overflow-hidden">
