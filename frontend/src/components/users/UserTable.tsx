@@ -32,13 +32,16 @@ import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import ConfirmDeleteModal from "@/app/modals/confirmDeleteModal";
 import { BsTrash } from "react-icons/bs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function UsersTable({
   users,
   refetch,
+  isLoading,
 }: {
   users: UserWithStats[] | undefined;
   refetch: () => void;
+  isLoading?: boolean;
 }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserWithStats | null>(null);
@@ -66,7 +69,7 @@ export function UsersTable({
     }
   };
 
-  if (!users) return <NoItemsFound />;
+  if (!users && !isLoading) return <NoItemsFound />;
   return (
     <div className="space-y-4">
       <Card>
@@ -90,66 +93,98 @@ export function UsersTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <div>
-                        <div className="font-medium">{user.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {user.email}
+              {isLoading
+                ? // Loading skeletons
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell>
+                        <div className="flex flex-col gap-2">
+                          <Skeleton className="h-5 w-32" />
+                          <Skeleton className="h-4 w-24" />
                         </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        user.role === "ADMIN"
-                          ? "default"
-                          : user.role === "USER"
-                          ? "outline"
-                          : "secondary"
-                      }
-                    >
-                      {user.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="!ps-5">{user.totalFiles}</TableCell>
-                  <TableCell className="!ps-5">{user.processedFiles}</TableCell>
-                  <TableCell>
-                    {user.totalFiles > 0
-                      ? `${Math.round(
-                          (user.processedFiles / user.totalFiles) * 100
-                        )}%`
-                      : "0%"}
-                  </TableCell>
-                  <TableCell>
-                    {user.lastActivity && formatDate(user.lastActivity)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {user.role !== "ADMIN" ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <FiMoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            className="text-red-500 cursor-pointer"
-                            onClick={() => handleOpenDeleteModal(user)}
-                          >
-                            <BsTrash className="text-red-500" />
-                            Delete user
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    ) : null}
-                  </TableCell>
-                </TableRow>
-              ))}
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-10" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-10" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-12" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-24" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="h-8 w-8 rounded-full ml-auto" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : users?.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <div className="font-medium">{user.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {user.email}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            user.role === "ADMIN"
+                              ? "default"
+                              : user.role === "USER"
+                              ? "outline"
+                              : "secondary"
+                          }
+                        >
+                          {user.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="!ps-5">{user.totalFiles}</TableCell>
+                      <TableCell className="!ps-5">
+                        {user.processedFiles}
+                      </TableCell>
+                      <TableCell>
+                        {user.totalFiles > 0
+                          ? `${Math.round(
+                              (user.processedFiles / user.totalFiles) * 100
+                            )}%`
+                          : "0%"}
+                      </TableCell>
+                      <TableCell>
+                        {user.lastActivity && formatDate(user.lastActivity)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {user.role !== "ADMIN" ? (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <FiMoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                className="text-red-500 cursor-pointer"
+                                onClick={() => handleOpenDeleteModal(user)}
+                              >
+                                <BsTrash className="text-red-500" />
+                                Delete user
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        ) : null}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </CardContent>

@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BsCheckCircle } from "react-icons/bs";
 import { FaFile } from "react-icons/fa6";
 import { LuClock4, LuFileX2 } from "react-icons/lu";
+import { Skeleton } from "@/components/ui/skeleton";
+
 export interface FileStatResult {
   status: "fulfilled" | "rejected";
   value?: number;
@@ -14,7 +16,14 @@ export interface FileStatsResponse {
   errorCount: FileStatResult;
   processingCount: FileStatResult;
 }
-export function StatsCards({ data }: { data: FileStatsResponse | undefined }) {
+
+export function StatsCards({
+  data,
+  isLoading,
+}: {
+  data: FileStatsResponse | undefined;
+  isLoading?: boolean;
+}) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -23,9 +32,13 @@ export function StatsCards({ data }: { data: FileStatsResponse | undefined }) {
           <FaFile className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {data?.totalFiles.value || 0}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">
+              {data?.totalFiles.value || 0}
+            </div>
+          )}
         </CardContent>
       </Card>
       <Card>
@@ -34,9 +47,13 @@ export function StatsCards({ data }: { data: FileStatsResponse | undefined }) {
           <BsCheckCircle className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {data?.completeCount.value || 0}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">
+              {data?.completeCount.value || 0}
+            </div>
+          )}
         </CardContent>
       </Card>
       <Card>
@@ -45,9 +62,13 @@ export function StatsCards({ data }: { data: FileStatsResponse | undefined }) {
           <LuFileX2 className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {data?.errorCount.value || 0}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">
+              {data?.errorCount.value || 0}
+            </div>
+          )}
         </CardContent>
       </Card>
       <Card>
@@ -56,9 +77,13 @@ export function StatsCards({ data }: { data: FileStatsResponse | undefined }) {
           <LuClock4 className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {data?.processingCount.value || 0}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">
+              {data?.processingCount.value || 0}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

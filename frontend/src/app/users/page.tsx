@@ -26,11 +26,12 @@ export interface UsersWithStatsResponse {
 export default function UsersPage() {
   const [page, setPage] = useState(1);
 
-  const { data } = useSWR<FileStatsResponse>("/files/userFileStats", fetcher);
+  const { data: statsData, isLoading: statsLoading } =
+    useSWR<FileStatsResponse>("/files/userFileStats", fetcher);
   const {
     data: users,
     mutate,
-    isLoading,
+    isLoading: usersLoading,
   } = useSWR<UsersWithStatsResponse>(`/users?page=${page}`, fetcher);
 
   return (
@@ -42,14 +43,22 @@ export default function UsersPage() {
           </h2>
         </div>
         <div className="space-y-4">
-          <HeaderCards data={data} totalUsers={users?.total} />
-          <UsersTable users={users?.data} refetch={mutate} />
+          <HeaderCards
+            data={statsData}
+            totalUsers={users?.total}
+            isLoading={statsLoading || usersLoading}
+          />
+          <UsersTable
+            users={users?.data}
+            refetch={mutate}
+            isLoading={usersLoading}
+          />
           <CustomPagination
             count={users?.total ?? 0}
             currentPage={page}
             handlePageChange={(page) => setPage(page)}
             pageSize={users?.pageSize ?? 10}
-            isLoading={isLoading}
+            isLoading={usersLoading}
           />
         </div>
       </main>

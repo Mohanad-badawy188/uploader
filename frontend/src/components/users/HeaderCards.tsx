@@ -4,13 +4,16 @@ import { BsFileCheck } from "react-icons/bs";
 import { FaUsers } from "react-icons/fa";
 import { LuFileUp } from "react-icons/lu";
 import { FileStatsResponse } from "@/app/page";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HeaderCards({
   data,
   totalUsers,
+  isLoading,
 }: {
   data: FileStatsResponse | undefined;
   totalUsers: number | undefined;
+  isLoading?: boolean;
 }) {
   const total = data?.totalFiles.value ?? 0;
   const completed = data?.completeCount.value ?? 0;
@@ -24,7 +27,11 @@ export default function HeaderCards({
           <FaUsers className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalUsers ?? 0}</div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{totalUsers ?? 0}</div>
+          )}
         </CardContent>
       </Card>
 
@@ -34,7 +41,11 @@ export default function HeaderCards({
           <LuFileUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{total}</div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{total}</div>
+          )}
         </CardContent>
       </Card>
 
@@ -44,7 +55,11 @@ export default function HeaderCards({
           <BsFileCheck className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{completed}</div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{completed}</div>
+          )}
         </CardContent>
       </Card>
 
@@ -67,7 +82,11 @@ export default function HeaderCards({
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{rate}%</div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{rate}%</div>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -53,16 +53,15 @@ function Home() {
   const [page, setPage] = useState(1);
 
   const router = useRouter();
-  const { data } = useSWR<FileStatsResponse>(
+  const { data, isLoading: statsLoading } = useSWR<FileStatsResponse>(
     fileType === "all"
       ? "/files/userFileStats"
       : `/files/userFileStats?type=${fileType}`,
     fetcher
   );
-  const { data: uploadData } = useSWR<UploadTrendItem[]>(
-    "/files/upload-trends",
-    fetcher
-  );
+  const { data: uploadData, isLoading: trendsLoading } = useSWR<
+    UploadTrendItem[]
+  >("/files/upload-trends", fetcher);
   const {
     files,
     isLoading: TableLoading,
@@ -112,7 +111,7 @@ function Home() {
         </Button>
       </div>
 
-      <StatsCards data={data} />
+      <StatsCards data={data} isLoading={statsLoading} />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="lg:col-span-4">
@@ -124,6 +123,7 @@ function Home() {
             <UploadSuccessChart
               complete={data?.completeCount.value || 0}
               error={data?.errorCount.value || 0}
+              isLoading={statsLoading}
             />
           </CardContent>
         </Card>
@@ -133,7 +133,10 @@ function Home() {
             <CardDescription>Number of uploads over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <UploadTrendsChart data={uploadData ?? []} />
+            <UploadTrendsChart
+              data={uploadData ?? []}
+              isLoading={trendsLoading}
+            />
           </CardContent>
         </Card>
       </div>
@@ -146,28 +149,26 @@ function Home() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {files.length ? (
-            TableLoading ? (
-              <div className="flex items-center justify-center min-h-40">
-                <ImSpinner2 className="animate-spin size-10" />
-              </div>
-            ) : (
-              <>
-                <FilesTable
-                  files={files}
-                  handleSorting={handleSorting}
-                  sorting={sorting}
-                  refreshFiles={refreshFiles}
-                />
-                <CustomPagination
-                  count={total ?? 0}
-                  currentPage={page}
-                  handlePageChange={(page) => setPage(page)}
-                  pageSize={5}
-                  isLoading={isLoading}
-                />
-              </>
-            )
+          {TableLoading ? (
+            <div className="flex items-center justify-center min-h-40">
+              <ImSpinner2 className="animate-spin size-10" />
+            </div>
+          ) : files.length ? (
+            <>
+              <FilesTable
+                files={files}
+                handleSorting={handleSorting}
+                sorting={sorting}
+                refreshFiles={refreshFiles}
+              />
+              <CustomPagination
+                count={total ?? 0}
+                currentPage={page}
+                handlePageChange={(page) => setPage(page)}
+                pageSize={5}
+                isLoading={isLoading}
+              />
+            </>
           ) : (
             <NoItemsFound />
           )}

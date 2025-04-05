@@ -1,10 +1,12 @@
 "use client";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface UploadSuccessChartProps {
   complete: number;
   error: number;
+  isLoading?: boolean;
 }
 
 const COLORS = ["#22c55e", "#ef4444"]; // ✅ success = green, error = red
@@ -12,7 +14,17 @@ const COLORS = ["#22c55e", "#ef4444"]; // ✅ success = green, error = red
 export function UploadSuccessChart({
   complete,
   error,
+  isLoading,
 }: UploadSuccessChartProps) {
+  if (isLoading) {
+    return (
+      <div className="relative w-full h-64 flex items-center justify-center">
+        <Skeleton className="h-[220px] w-[220px] rounded-full" />
+        <Skeleton className="absolute inset-0 m-auto h-[100px] w-[100px] rounded-full" />
+      </div>
+    );
+  }
+
   const total = complete + error;
   const successRate = total === 0 ? 0 : Math.round((complete / total) * 100);
 
