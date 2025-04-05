@@ -51,15 +51,21 @@ export class AuthController {
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('auth_token');
+    res.clearCookie('auth_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      // Use the same settings as when setting the cookie
+    });
     return { success: true };
   }
 
   private setAuthCookie(res: Response, token: string) {
-    res.cookie('auth_token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+    res.cookie('debug_token', token, {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax',
       path: '/',
     });
   }

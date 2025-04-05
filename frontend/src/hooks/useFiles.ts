@@ -29,13 +29,9 @@ export const useFiles = (params: Params) => {
     {
       keepPreviousData: true,
       revalidateOnFocus: false,
-      dedupingInterval: 0,
-      onErrorRetry: (error) => {
-        if (error.message === "AbortError") return;
-      },
+      dedupingInterval: 2000,
     }
   );
-
   return {
     files: data?.data ?? [],
     total: data?.total ?? 0,
