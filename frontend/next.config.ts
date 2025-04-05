@@ -9,11 +9,11 @@ const nextConfig: NextConfig = {
         port: "3000",
         pathname: "/**",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: "production", // 🔁 your production API hostname
-      //   pathname: "/uploads/**",
-      // },
+      {
+        protocol: "https",
+        hostname: "responsible-victory-production.up.railway.app",
+        pathname: "/uploads/**",
+      },
     ],
   },
 };
