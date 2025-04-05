@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { login as loginAction } from "@/server-actions/auth";
+import { api } from "@/lib/api";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
+      const test = await api.post("/auth/login", values);
       const res = await loginAction(values);
       const { user } = res;
       login(user);
