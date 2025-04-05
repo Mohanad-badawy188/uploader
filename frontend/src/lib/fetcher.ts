@@ -31,6 +31,7 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
     return api
       .get<T>(url, {
         signal: controller.signal,
+        withCredentials: true,
         // Add a timestamp to prevent browser caching
         params: { _t: new Date().getTime() },
       })
