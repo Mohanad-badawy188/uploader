@@ -62,7 +62,7 @@ export class AuthController {
   }
 
   private setAuthCookie(res: Response, token: string) {
-    res.cookie('debug_token', token, {
+    res.cookie('auth_token', token, {
       httpOnly: false,
       secure: false,
       sameSite: 'lax',
