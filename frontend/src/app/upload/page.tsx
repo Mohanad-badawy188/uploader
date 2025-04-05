@@ -14,8 +14,9 @@ import { UploadFileItemType } from "@/types/File";
 import { api } from "@/lib/api";
 import axios from "axios";
 import { validateFile } from "@/helper/validateFile";
+import { withAuthClient } from "@/middlewares/withAuthClient";
 
-export default function FileUploader() {
+function UploadPage() {
   const [file, setFile] = useState<UploadFileItemType | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -170,3 +171,6 @@ export default function FileUploader() {
     </div>
   );
 }
+
+// Apply the auth middleware to restrict this page to authenticated users
+export default withAuthClient(UploadPage);

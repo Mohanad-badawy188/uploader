@@ -38,12 +38,12 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      // The API will set the HTTP-only cookie automatically
+      // Get user data and token from response
       const response = await api.post("/auth/login", values);
-      const { user } = response.data;
+      const { user, accessToken } = response.data;
 
-      // Update auth context with user data
-      login(user);
+      // Update auth context with user data and token
+      login({ user, accessToken });
 
       toast.success("Login successful!");
       router.push("/");

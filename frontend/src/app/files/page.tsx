@@ -16,8 +16,9 @@ import FileList from "@/components/files/FileList";
 import { useFiles } from "@/hooks/useFiles";
 import Pagination from "@/components/common/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
+import { withAuthClient } from "@/middlewares/withAuthClient";
 
-export default function Page() {
+function FilesPage() {
   // UI state
   const [searchInput, setSearchInput] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -136,3 +137,6 @@ export default function Page() {
     </main>
   );
 }
+
+// Apply the auth middleware to restrict this page to authenticated users
+export default withAuthClient(FilesPage);

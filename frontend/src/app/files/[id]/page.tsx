@@ -4,8 +4,9 @@ import Spinner from "@/components/common/Spinner";
 import { FileContainer } from "@/components/files/File/FileContainer";
 import { useFileById } from "@/hooks/useFileById";
 import { useParams } from "next/navigation";
+import { withAuthClient } from "@/middlewares/withAuthClient";
 
-export default function FilePage() {
+function FilePage() {
   const params = useParams();
   const id = params?.id as string;
   const { file, isLoading, isError } = useFileById(id);
@@ -38,3 +39,5 @@ export default function FilePage() {
     </main>
   );
 }
+
+export default withAuthClient(FilePage);

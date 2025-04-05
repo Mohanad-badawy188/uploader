@@ -1,46 +1,31 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  UseGuards,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, SignupDto } from './dto';
 import { JwtAuthGuard } from './guards/at.guard';
 import { RequestWithUser } from 'src/common/types/RequestWithUser';
-import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  async signup(
-    @Body() dto: SignupDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async signup(@Body() dto: SignupDto) {
     const result = await this.authService.signup(dto);
 
-    // Set JWT as HTTP-only cookie
-    this.setAuthCookie(res, result.accessToken);
-
-    return { user: result.user };
+    return {
+      user: result.user,
+      accessToken: result.accessToken,
+    };
   }
 
   @Post('login')
-  async login(
-    @Body() dto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async login(@Body() dto: LoginDto) {
     const result = await this.authService.login(dto);
 
-    // Set JWT as HTTP-only cookie
-    this.setAuthCookie(res, result.accessToken);
-
-    return { user: result.user };
+    return {
+      user: result.user,
+      accessToken: result.accessToken,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,23 +35,9 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('auth_token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-      // Use the same settings as when setting the cookie
-    });
+  logout() {
+    // With JWT in Authorization header, no server-side logout needed
+    // The frontend will handle removing the token
     return { success: true };
-  }
-
-  private setAuthCookie(res: Response, token: string) {
-    res.cookie('auth_token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-    });
   }
 }

@@ -6,8 +6,9 @@ import Spinner from "@/components/common/Spinner";
 import { LogsTable } from "@/components/logs/LogsTable";
 import { useLogs } from "@/hooks/useLogs";
 import CustomPagination from "@/components/common/Pagination";
+import { withAuthClient } from "@/middlewares/withAuthClient";
 
-export default function LogsPage() {
+function LogsPage() {
   const [page, setPage] = useState(1);
   const { logs, isLoading, total, pageSize } = useLogs(page);
 
@@ -33,3 +34,6 @@ export default function LogsPage() {
     </div>
   );
 }
+
+// Apply the auth middleware to restrict this page to admin users
+export default withAuthClient(LogsPage);

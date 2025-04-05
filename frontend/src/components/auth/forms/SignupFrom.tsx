@@ -41,11 +41,13 @@ export default function SignupForm() {
     try {
       const { confirmPassword, ...apiValues } = values;
 
-      // The API will set the HTTP-only cookie automatically
+      // Get user data and token from response
       const response = await api.post("/auth/signup", apiValues);
-      const { user } = response.data;
+      const { user, accessToken } = response.data;
 
-      login(user);
+      // Update auth context with user data and token
+      login({ user, accessToken });
+
       toast.success("Account created successfully!");
       router.push("/");
 

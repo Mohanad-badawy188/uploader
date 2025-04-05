@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import HeaderCards from "@/components/users/HeaderCards";
 import { UsersTable } from "@/components/users/UserTable";
 import { FileStatsResponse } from "../page";
@@ -6,6 +7,8 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { useState } from "react";
 import CustomPagination from "@/components/common/Pagination";
+import { withAuthClient } from "@/middlewares/withAuthClient";
+
 export interface UserWithStats {
   id: number;
   name: string;
@@ -23,7 +26,7 @@ export interface UsersWithStatsResponse {
   pageSize: number;
 }
 
-export default function UsersPage() {
+function UsersPage() {
   const [page, setPage] = useState(1);
 
   const { data: statsData, isLoading: statsLoading } =
@@ -65,3 +68,6 @@ export default function UsersPage() {
     </div>
   );
 }
+
+// Apply the auth middleware to restrict this page to authenticated users
+export default withAuthClient(UsersPage);
