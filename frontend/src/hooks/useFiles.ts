@@ -1,4 +1,3 @@
-// src/hooks/useFiles.ts
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { manageQueryString } from "@/helper/manageQueryStrings";

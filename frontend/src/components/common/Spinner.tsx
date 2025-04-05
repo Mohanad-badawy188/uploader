@@ -3,7 +3,7 @@ import { ImSpinner2 } from "react-icons/im";
 import clsx from "clsx";
 
 interface SpinnerProps {
-  size?: number; // icon size in px
+  size?: number;
   className?: string;
   centered?: boolean;
   minHeight?: string;

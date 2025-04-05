@@ -28,6 +28,8 @@ import NoItemsFound from "@/components/common/NoItemsFound";
 import { UploadSuccessChart } from "@/components/home/UploadSuccessChart";
 import { UploadTrendsChart } from "@/components/home/UploadTrendChart";
 import CustomPagination from "@/components/common/Pagination";
+import { withAuthClient } from "@/middlewares/withAuthClient";
+
 export interface FileStatResult {
   status: "fulfilled" | "rejected";
   value?: number;
@@ -45,7 +47,7 @@ interface UploadTrendItem {
   count: number;
 }
 
-export default function Home() {
+function Home() {
   const [fileType, setFileType] = useState("all");
   const [sorting, setSorting] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
@@ -81,6 +83,7 @@ export default function Home() {
   useEffect(() => {
     setPage(1);
   }, [fileType]);
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex items-center gap-4">
@@ -173,3 +176,5 @@ export default function Home() {
     </main>
   );
 }
+
+export default withAuthClient(Home);

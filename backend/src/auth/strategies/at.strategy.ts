@@ -24,11 +24,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        // Extract from auth_token cookie (primary method)
         (req: Request): string | null => {
-          return req.cookies?.auth_token || null;
+          const cookies = req.cookies as Record<string, unknown>;
+          return cookies && typeof cookies.auth_token === 'string'
+            ? cookies.auth_token
+            : null;
         },
-        // Fallback to Authorization header (Bearer token)
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       secretOrKey: secret,

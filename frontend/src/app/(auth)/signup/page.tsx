@@ -1,8 +1,8 @@
-"use server";
+"use client";
 
 import Link from "next/link";
 import SignupForm from "@/components/auth/forms/SignupFrom";
-import { withGuest } from "@/middlewares/withGuest";
+import { withGuestClient } from "@/middlewares/withGuestClient";
 
 function SignupPage() {
   return (
@@ -32,4 +32,4 @@ function SignupPage() {
     </div>
   );
 }
-export default withGuest(SignupPage);
+export default withGuestClient(SignupPage);

@@ -7,7 +7,6 @@ import { FaArrowLeft } from "react-icons/fa";
 import FilePreview from "./FilePreview";
 import FileDetails from "./FileDetails";
 import FileProperties from "./FileProperties";
-// import { formatDate } from "@/helper/formatDate";
 
 interface FileDetailsProps {
   file: FileItem;
@@ -25,13 +24,11 @@ export function FileContainer({ file }: FileDetailsProps) {
         <h1 className="text-2xl font-bold">File Details</h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column - Preview */}
         <div className="lg:col-span-2 space-y-6">
           <FilePreview file={file} />
           <FileDetails file={file} />
         </div>
 
-        {/* Right column - Related files or actions */}
         <FileProperties file={file} />
       </div>
     </div>

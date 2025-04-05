@@ -42,7 +42,6 @@ export default function Page() {
     setCurrentPage(page);
   };
 
-  // Toggle sort direction
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };

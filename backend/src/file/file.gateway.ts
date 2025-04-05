@@ -7,7 +7,7 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // or restrict to your frontend domain
+    origin: '*',
   },
 })
 export class FileGateway implements OnGatewayConnection {

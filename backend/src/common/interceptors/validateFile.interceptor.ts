@@ -1,4 +1,3 @@
-// src/common/interceptors/file-validation.interceptor.ts
 import {
   CallHandler,
   ExecutionContext,

@@ -1,10 +1,11 @@
-"use server";
+"use client";
 
 import LoginForm from "@/components/auth/forms/LoginForm";
-import { withGuest } from "@/middlewares/withGuest";
+import { withGuestClient } from "@/middlewares/withGuestClient";
 import Link from "next/link";
 
-const LoginPage = async () => {
+const LoginPage = () => {
+  console.log(1);
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-md w-full space-y-8">
@@ -33,4 +34,4 @@ const LoginPage = async () => {
   );
 };
 
-export default withGuest(LoginPage);
+export default withGuestClient(LoginPage);

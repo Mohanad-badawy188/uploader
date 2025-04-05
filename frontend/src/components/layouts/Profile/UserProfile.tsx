@@ -12,16 +12,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { FaRegUser } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import { logoutUser } from "@/server-actions/auth";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function UserProfile() {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    await logoutUser();
-    router.push("/login");
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error("Logout failed. Please try again.");
+    }
   };
 
   return (

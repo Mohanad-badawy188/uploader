@@ -1,4 +1,3 @@
-import { UserActivity } from './../../node_modules/.prisma/client/index.d';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';

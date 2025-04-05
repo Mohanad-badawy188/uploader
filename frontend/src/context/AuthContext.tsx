@@ -1,14 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { User } from "@/types/User";
 import { fetcher } from "@/lib/fetcher";
 import useSWR from "swr";
+import { api } from "@/lib/api";
 
 type AuthContextType = {
   user: User | null;
   login: (user?: User) => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
 };
 
@@ -35,14 +37,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const logout = useCallback(async () => {
+    try {
+      await api.post("/auth/logout");
+
+      mutate(null, false);
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+
+      mutate(null, false);
+      router.push("/login");
+    }
+  }, [mutate, router]);
+
   useEffect(() => {
     if (error) {
-      // router.push("/login");
+      logout();
     }
-  }, [error, router]);
+  }, [error, router, logout]);
 
   return (
-    <AuthContext.Provider value={{ user: user ?? null, login, isLoading }}>
+    <AuthContext.Provider
+      value={{ user: user ?? null, login, logout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

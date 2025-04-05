@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signup } from "@/server-actions/auth";
 import { api } from "@/lib/api";
 
 export default function SignupForm() {
