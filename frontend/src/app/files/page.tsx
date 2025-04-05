@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -122,7 +122,7 @@ export default function Page() {
       ) : (
         <div>
           <FileList files={files} isLoading={isLoading} />
-          {!isLoading && (
+          {!isLoading && files.length > 0 && (
             <Pagination
               handlePageChange={handlePageChange}
               count={total}

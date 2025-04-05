@@ -2,7 +2,6 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import { manageQueryString } from "@/helper/manageQueryStrings";
 import { FileItem } from "@/types/File";
-import { useEffect } from "react";
 
 type Params = {
   search?: string;
@@ -28,20 +27,14 @@ export const useFiles = (params: Params) => {
     key,
     fetcher,
     {
-      keepPreviousData: true, // Keep showing previous data while loading new data
-      revalidateOnFocus: false, // Don't reload when window refocuses
-      dedupingInterval: 2000, // Dedupe requests within 2 seconds
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+      dedupingInterval: 0,
+      onErrorRetry: (error) => {
+        if (error.message === "AbortError") return;
+      },
     }
   );
-
-  // Handle any cleanup when the query changes
-  useEffect(() => {
-    // Return cleanup function that will be called when the component unmounts
-    // or when the query changes
-    return () => {
-      // Cleanup will happen automatically through the fetcher
-    };
-  }, [key]);
 
   return {
     files: data?.data ?? [],
@@ -49,7 +42,7 @@ export const useFiles = (params: Params) => {
     page: data?.page ?? 1,
     pageSize: data?.pageSize ?? 10,
     isLoading,
-    isError: !!error,
+    isError: !!error && error.message !== "AbortError",
     mutate,
   };
 };
