@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +15,18 @@ import { ImSortAlphaAsc, ImSortAlphaDesc } from "react-icons/im";
 import FileList from "@/components/files/FileList";
 import { useFiles } from "@/hooks/useFiles";
 import Pagination from "@/components/common/Pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState("");
+  // UI state
+  const [searchInput, setSearchInput] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState<"date" | "name" | "size">("date");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search to avoid excessive requests
+  const debouncedSearch = useDebounce(searchInput, 300);
 
   const sortMap = {
     date: "createdAt",
@@ -29,8 +34,9 @@ export default function Page() {
     size: "size",
   };
 
+  // Use the files hook with debounced search
   const { files, isLoading, isError, page, total, pageSize } = useFiles({
-    search: searchQuery,
+    search: debouncedSearch,
     type: typeFilter !== "all" ? typeFilter : undefined,
     sortBy: sortMap[sortBy],
     sortOrder: sortDirection,
@@ -38,16 +44,18 @@ export default function Page() {
     limit: 8,
   });
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  };
+  }, []);
 
-  const toggleSortDirection = () => {
+  const toggleSortDirection = useCallback(() => {
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-  };
+  }, [sortDirection]);
+
+  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [typeFilter]);
+  }, [typeFilter, debouncedSearch, sortBy, sortDirection]);
 
   return (
     <main className="p-3 md:p-6 space-y-4 md:space-y-6 overflow-auto">
@@ -57,8 +65,8 @@ export default function Page() {
           <Input
             placeholder="Search files..."
             className="pl-10 w-full py-2"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
