@@ -36,9 +36,8 @@ export default function AuthLoader({ children }: AuthLoaderProps) {
 
     const checkAuth = async () => {
       try {
-        await api.get("/auth/profile");
-        setIsCheckingAuth(false);
-      } catch (error) {
+        if (!user) setIsCheckingAuth(false);
+      } catch {
         router.push("/login");
       }
     };

@@ -4,7 +4,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/common/Spinner";
-import { api } from "@/lib/api";
 
 type Role = "USER" | "ADMIN";
 
@@ -25,7 +24,6 @@ export function withAuthClient(Component: React.ComponentType<any>) {
     const router = useRouter();
     const pathname = usePathname();
 
-    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [userRole, setUserRole] = useState<Role | null>(null);
 
@@ -34,63 +32,29 @@ export function withAuthClient(Component: React.ComponentType<any>) {
       .find((path) => pathname?.startsWith(path));
 
     useEffect(() => {
-      const checkAuth = async () => {
-        if (user && !isLoading) {
-          if (user.role) {
-            setUserRole(user.role as Role);
-
-            if (route) {
-              const allowedRoles = protectedRoutes[route];
-              if (allowedRoles.includes(user.role as Role)) {
-                setIsAuthorized(true);
-              } else {
-                router.push("/404");
-              }
-            } else {
-              setIsAuthorized(true);
-            }
-          }
-          setIsCheckingAuth(false);
-          return;
-        }
-
-        if (isLoading) {
-          return;
-        }
-
-        try {
-          const response = await api.get("/auth/profile");
-
-          if (response.data && response.data.role) {
-            setUserRole(response.data.role);
-
-            if (route) {
-              const allowedRoles = protectedRoutes[route];
-              if (allowedRoles.includes(response.data.role)) {
-                setIsAuthorized(true);
-              } else {
-                router.push("/404");
-              }
-            } else {
-              setIsAuthorized(true);
-            }
-          }
-        } catch (error) {
-          router.push("/login");
-        } finally {
-          setIsCheckingAuth(false);
-        }
-      };
-
-      if (route) {
-        checkAuth();
-      } else {
-        setIsAuthorized(true);
-        setIsCheckingAuth(false);
+      if (!user && !isLoading) {
+        router.push("/login");
+        return;
       }
-    }, [pathname, route, router, user, isLoading]);
 
-    if (isCheckingAuth || isLoading) {
+      if (user?.role && !isLoading) {
+        const role = user.role as Role;
+        setUserRole(role);
+
+        if (route) {
+          const allowedRoles = protectedRoutes[route];
+          if (allowedRoles.includes(role)) {
+            setIsAuthorized(true);
+          } else {
+            router.push("/404");
+          }
+        } else {
+          setIsAuthorized(true);
+        }
+      }
+    }, [user, isLoading, pathname, route, router]);
+
+    if (isLoading) {
       return (
         <div className="flex items-center justify-center min-h-screen">
           <Spinner size={40} className="w-8 h-8" />

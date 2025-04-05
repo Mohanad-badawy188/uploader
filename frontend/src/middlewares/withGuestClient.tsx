@@ -46,12 +46,13 @@ export function withGuestClient(Component: React.ComponentType<any>) {
       checkAuth();
     }, [user, isLoading]);
 
-    // If the user is already loaded from context AND is authenticated, redirect immediately
+    // Handle redirects in a separate effect
     useEffect(() => {
-      if (user && !isLoading) {
+      // Redirect authenticated users to home
+      if (isAuthenticated) {
         router.push("/");
       }
-    }, [user, isLoading, router]);
+    }, [isAuthenticated, router]);
 
     // If we're still checking authentication or loading the user from context
     if (isCheckingAuth || isLoading) {
@@ -62,9 +63,8 @@ export function withGuestClient(Component: React.ComponentType<any>) {
       );
     }
 
-    // If our direct auth check found that the user is authenticated, redirect
+    // Render nothing while the redirect happens
     if (isAuthenticated) {
-      router.push("/");
       return null;
     }
 
