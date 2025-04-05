@@ -17,9 +17,9 @@ export const login = async (body: any) => {
   // Set HTTP-only cookie with the token
   cookieStore.set("token", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     path: "/",
-    sameSite: "lax",
+    sameSite: "none",
   });
 
   revalidateTag("auth/login");
@@ -39,9 +39,9 @@ export const signup = async (body: any) => {
 
   cookieStore.set("token", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     path: "/",
-    sameSite: "lax",
+    sameSite: "none",
   });
 
   return response;

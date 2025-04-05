@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/server-actions/auth";
+import { api } from "@/lib/api";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -40,8 +41,10 @@ export default function SignupForm() {
 
     try {
       const { confirmPassword, ...apiValues } = values;
-      const res = await signup(apiValues);
-      const { user } = res;
+
+      // The API will set the HTTP-only cookie automatically
+      const response = await api.post("/auth/signup", apiValues);
+      const { user } = response.data;
 
       login(user);
       toast.success("Account created successfully!");
@@ -49,14 +52,15 @@ export default function SignupForm() {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (error.message) {
-        const errors = error.message.split(",");
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        errors.map((err: any) => toast.error(err));
+      if (error.response?.data?.message) {
+        const message = error.response.data.message;
+        if (Array.isArray(message)) {
+          message.forEach((err) => toast.error(err));
+        } else {
+          toast.error(message);
+        }
       } else {
-        const message = "Something went wrong. Please try again.";
-
-        toast.error(message);
+        toast.error("Something went wrong. Please try again.");
       }
     } finally {
       setIsLoading(false);

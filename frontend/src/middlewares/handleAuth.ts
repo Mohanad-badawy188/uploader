@@ -29,7 +29,7 @@ export function handleAuth(request: NextRequest) {
   if (!route) return NextResponse.next();
 
   if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
   try {
     // Decode JWT token (i dont wanna add jwt-decode for just getting the role ( my token has no epxiration) and i wont use it anywhere else  )
@@ -44,6 +44,6 @@ export function handleAuth(request: NextRequest) {
 
     return NextResponse.next();
   } catch {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
 }

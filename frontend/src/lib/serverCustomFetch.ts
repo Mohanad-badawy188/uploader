@@ -17,6 +17,7 @@ export async function customFetch({
 }) {
   const headers: Record<string, string> = {};
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  console.log(baseURL);
   const cookieStore = await cookies();
   const cookieString = cookieStore
     .getAll()
@@ -46,6 +47,7 @@ export async function customFetch({
       ...(cacheTag && { tags: [cacheTag] }),
     },
   });
+  console.log(response.data);
   if (!response.ok) {
     const errorData = await response.json(); // 👈 parse backend error
     throw new Error(errorData.message || "Something went wrong");

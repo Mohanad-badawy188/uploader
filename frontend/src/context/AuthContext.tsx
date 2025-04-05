@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (error) {
-      router.push("/login");
+      // router.push("/login");
     }
   }, [error, router]);
 
