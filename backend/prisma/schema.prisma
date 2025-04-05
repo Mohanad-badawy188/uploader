@@ -24,6 +24,8 @@ model User {
   notifications Notification[]
   activities UserActivity[]
 
+  @@index([email])
+  @@index([role])
   @@map("users")
 }
 
@@ -43,6 +45,9 @@ model File {
   thumbnail     String?  
   notifications Notification[]
 
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
   @@map("files")
 }
 model Notification {
@@ -57,6 +62,9 @@ model Notification {
   file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([fileId])
+  @@index([status])
+  @@index([createdAt])
   @@map("notification")
 }
 model UserActivity {
@@ -67,6 +75,10 @@ model UserActivity {
   createdAt DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }
 enum Role {
   USER
