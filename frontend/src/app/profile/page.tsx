@@ -12,7 +12,10 @@ import { fetcher } from "@/lib/fetcher";
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const { data } = useSWR<FileStatsResponse>("/files/userFileStats", fetcher);
+  const { data } = useSWR<FileStatsResponse>(
+    "/files/userFileStats?adminViewOwn=true",
+    fetcher
+  );
   const total = data?.totalFiles.value || 0;
   const complete = data?.completeCount.value || 0;
   const successRate = total > 0 ? (complete / total) * 100 : 0;

@@ -55,6 +55,7 @@ export class FileController {
     @Query('type') type?: string,
     @Query('sortBy') sortBy = 'createdAt',
     @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
+    @Query('adminViewOwn') adminViewOwn?: string,
   ) {
     return this.fileService.getUserFiles({
       user: req.user,
@@ -64,6 +65,7 @@ export class FileController {
       type,
       sortBy,
       sortOrder,
+      adminViewOwn: adminViewOwn === 'true',
     });
   }
 
@@ -71,14 +73,22 @@ export class FileController {
   async getFileStats(
     @Req() req: RequestWithUser,
     @Query('type') type?: string,
+    @Query('adminViewOwn') adminViewOwn?: string,
   ) {
     const user = req.user;
-    return this.fileService.getUserFileStats(user, type);
+    return this.fileService.getUserFileStats(
+      user,
+      type,
+      adminViewOwn === 'true',
+    );
   }
 
   @Get('upload-trends')
-  async getUploadTrends(@Req() req: RequestWithUser) {
-    return this.fileService.getUploadTrends(req.user);
+  async getUploadTrends(
+    @Req() req: RequestWithUser,
+    @Query('adminViewOwn') adminViewOwn?: string,
+  ) {
+    return this.fileService.getUploadTrends(req.user, adminViewOwn === 'true');
   }
 
   @Get(':id')

@@ -19,6 +19,7 @@ type FileQueryOptions = {
   type?: string;
   sortBy: string;
   sortOrder: 'asc' | 'desc';
+  adminViewOwn?: boolean;
 };
 
 const execAsync = promisify(exec);
@@ -119,9 +120,10 @@ export class FileService {
     type,
     sortBy,
     sortOrder,
+    adminViewOwn = false,
   }: FileQueryOptions) {
     const where: Prisma.FileWhereInput =
-      user.role === 'ADMIN' ? {} : { userId: user.id };
+      user.role === 'ADMIN' && !adminViewOwn ? {} : { userId: user.id };
 
     if (search) {
       where.originalName = { contains: search, mode: 'insensitive' };
@@ -211,8 +213,9 @@ export class FileService {
 
     return { message: 'File deleted successfully' };
   }
-  async getUserFileStats(user: User, type?: string) {
-    const whereBase = user.role === 'ADMIN' ? {} : { userId: user.id };
+  async getUserFileStats(user: User, type?: string, adminViewOwn = false) {
+    const whereBase =
+      user.role === 'ADMIN' && !adminViewOwn ? {} : { userId: user.id };
     const where = type
       ? {
           ...whereBase,
@@ -234,8 +237,9 @@ export class FileService {
       processingCount: processing,
     };
   }
-  async getUploadTrends(user: User) {
-    const whereBase = user.role === 'ADMIN' ? {} : { userId: user.id };
+  async getUploadTrends(user: User, adminViewOwn = false) {
+    const whereBase =
+      user.role === 'ADMIN' && !adminViewOwn ? {} : { userId: user.id };
 
     const allFiles = await this.prisma.file.findMany({
       where: { ...whereBase },
