@@ -62,7 +62,7 @@ export class AuthController {
       secure: true,
       sameSite: 'none',
       path: '/',
-      domain: 'https://uploader-sandy.vercel.app',
+      domain: 'uploader-sandy.vercel.app',
     });
   }
 }
