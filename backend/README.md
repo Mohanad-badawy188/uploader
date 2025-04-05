@@ -1,98 +1,194 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# File Uploader Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS-based backend for the File Uploader & Management System.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **RESTful API**: Comprehensive endpoints for file and user management
+- **Authentication**: JWT-based auth with role-based access control
+- **File Processing**: Upload, store, and process various file types
+- **Database Integration**: PostgreSQL with Prisma ORM
+- **Real-time Events**: WebSockets for instant notifications
+- **Logging**: System activity tracking for monitoring and debugging
+- **Security**: Input validation, error handling, and protection against common attacks
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Authentication**: JWT (JSON Web Tokens)
+- **WebSockets**: Socket.io
+- **File Processing**: Custom pipelines for different file types
 
-```bash
-$ npm install
+## API Endpoints
+
+### Authentication
+
+- `POST /auth/login` - User login
+- `POST /auth/register` - User registration
+
+### Files
+
+- `GET /files` - Get all files (paginated)
+- `GET /files/:id` - Get file by ID
+- `POST /files/upload` - Upload new file
+- `DELETE /files/:id` - Delete file
+
+### Users
+
+- `GET /users` - Get all users (Admin only)
+- `GET /users/:id` - Get user by ID
+- `POST /users` - Create new user (Admin only)
+- `PATCH /users/:id` - Update user
+- `DELETE /users/:id` - Delete user (Admin only)
+
+### Notifications
+
+- `GET /notifications` - Get user notifications
+- `PATCH /notifications/:id` - Mark notification as read
+
+### Logs
+
+- `GET /logs` - Get system logs (Admin only)
+
+## Project Structure
+
+```
+backend/
+├── prisma/                   # Prisma schema and migrations
+│   └── schema.prisma         # Database schema definition
+├── src/                      # Source code
+│   ├── main.ts               # Application entry point
+│   ├── app.module.ts         # Main application module
+│   ├── auth/                 # Authentication module
+│   │   ├── dto/              # Data transfer objects
+│   │   ├── guards/           # Authorization guards
+│   │   └── strategies/       # JWT strategies
+│   ├── file/                 # File handling module
+│   │   ├── dto/              # File DTOs
+│   │   ├── processors/       # File processing logic
+│   │   └── file.service.ts   # File operations
+│   ├── user/                 # User management module
+│   ├── notification/         # Notification module
+│   │   └── gateway/          # WebSocket gateway
+│   ├── log/                  # Logging module
+│   └── common/               # Shared utilities
+│       ├── decorators/       # Custom decorators
+│       ├── filters/          # Exception filters
+│       ├── guards/           # Common guards
+│       ├── interceptors/     # Request/response interceptors
+│       └── utils/            # Utility functions
+└── test/                     # End-to-end and unit tests
 ```
 
-## Compile and run the project
+## Getting Started
 
-```bash
-# development
-$ npm run start
+### Prerequisites
 
-# watch mode
-$ npm run start:dev
+- Node.js 18 or higher
+- npm or yarn
+- PostgreSQL database
 
-# production mode
-$ npm run start:prod
-```
+### Installation
 
-## Run tests
+1. Navigate to the backend directory:
 
-```bash
-# unit tests
-$ npm run test
+   ```bash
+   cd backend
+   ```
 
-# e2e tests
-$ npm run test:e2e
+2. Install dependencies:
 
-# test coverage
-$ npm run test:cov
-```
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-## Deployment
+3. Create a `.env` file with the following variables:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+   ```
+   # Database
+   DATABASE_URL="postgresql://user:password@localhost:5432/fileuploader"
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   # JWT
+   JWT_SECRET="your-secret-key"
+   JWT_EXPIRES_IN="7d"
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+   # Upload settings
+   UPLOAD_DIR="./uploads"
+   MAX_FILE_SIZE=15000000
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+   # Server
+   PORT=3001
+   ```
 
-## Resources
+4. Run Prisma migrations:
 
-Check out a few resources that may come in handy when working with NestJS:
+   ```bash
+   npx prisma migrate dev
+   ```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+5. Start the development server:
+   ```bash
+   npm run start:dev
+   # or
+   yarn start:dev
+   ```
 
-## Support
+### Database Setup
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Make sure PostgreSQL is running
+2. Create a database named `fileuploader`
+3. Run Prisma migrations to set up the schema:
 
-## Stay in touch
+   ```bash
+   npx prisma migrate dev
+   ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+4. (Optional) Seed the database with initial data:
+   ```bash
+   npm run seed
+   # or
+   yarn seed
+   ```
 
-## License
+## File Storage
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Uploaded files are stored in the `./uploads` directory (configurable via environment variables). The application creates the following subdirectories:
+
+- `./uploads/original` - Original uploaded files
+- `./uploads/thumbnails` - Generated thumbnails (for images)
+
+## Available Scripts
+
+- `npm run start` - Start the production server
+- `npm run start:dev` - Start the development server with hot-reload
+- `npm run build` - Build the application
+- `npm run test` - Run unit tests
+- `npm run test:e2e` - Run end-to-end tests
+- `npm run lint` - Run linting checks
+
+## Authentication & Authorization
+
+The backend uses JWT tokens for authentication:
+
+1. User logs in with credentials
+2. Server issues a JWT token
+3. Client includes the token in the Authorization header
+4. Server validates the token and extracts user data
+5. Role-based authorization guards protect sensitive endpoints
+
+## File Processing
+
+When a file is uploaded, the following happens:
+
+1. File is validated (size, type)
+2. File is saved to disk
+3. Background processing starts based on file type
+4. For documents: text extraction
+5. For images: thumbnail generation
+6. Processing status updates via WebSockets
+7. Notification is created when processing completes
