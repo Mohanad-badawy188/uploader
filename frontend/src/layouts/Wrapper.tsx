@@ -15,12 +15,14 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <AuthLoader>
       <NotificationProvider>
-        <div className="flex flex-col h-screen bg-white mb-32 sm:mb-5">
-          <div className="flex min-h-0 flex-1">
+        <div className="flex flex-col min-h-screen bg-white">
+          <div className="flex flex-1">
             <Sidebar />
-            <div className="flex flex-col flex-1 overflow-hidden">
+            <div className="flex flex-col flex-1 w-full">
               <Navbar />
-              <main className="flex-1 overflow-auto p-4">{children}</main>
+              <main className="flex-1 overflow-y-auto pb-20 sm:pb-6">
+                {children}
+              </main>
             </div>
           </div>
         </div>
