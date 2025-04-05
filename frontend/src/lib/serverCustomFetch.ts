@@ -47,7 +47,6 @@ export async function customFetch({
       ...(cacheTag && { tags: [cacheTag] }),
     },
   });
-  console.log(response.data);
   if (!response.ok) {
     const errorData = await response.json(); // 👈 parse backend error
     throw new Error(errorData.message || "Something went wrong");

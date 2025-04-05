@@ -29,6 +29,7 @@ export function handleAuth(request: NextRequest) {
   if (!route) return NextResponse.next();
 
   if (!token) {
+    return;
     // return NextResponse.redirect(new URL("/login", request.url));
   }
   try {
