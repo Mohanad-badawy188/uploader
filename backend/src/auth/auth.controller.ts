@@ -33,11 +33,4 @@ export class AuthController {
   getProfile(@Req() req: RequestWithUser) {
     return this.authService.getProfile(req.user);
   }
-
-  @Post('logout')
-  logout() {
-    // With JWT in Authorization header, no server-side logout needed
-    // The frontend will handle removing the token
-    return { success: true };
-  }
 }

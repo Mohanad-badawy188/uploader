@@ -27,22 +27,26 @@ NestJS-based backend for the File Uploader & Management System.
 ### Authentication
 
 - `POST /auth/login` - User login
-- `POST /auth/register` - User registration
+- `POST /auth/signup` - User registration
 
 ### Files
 
-- `GET /files` - Get all files (paginated)
+- `GET /files` - Get all files (paginated) for users or all files for admin
 - `GET /files/:id` - Get file by ID
-- `POST /files/upload` - Upload new file
-- `DELETE /files/:id` - Delete file
+- `GET /files/upload-trends` - Get total files uploaded per day
+- `GET /files/userFileStats` - Get total files uploaded , completed ,processing , with error
+- `POST /files/upload` - Upload new file and process it
+- `DELETE /files/:id` - Delete file for user owner or admin only
 
 ### Users
 
-- `GET /users` - Get all users (Admin only)
+(Admin only)
+
+- `GET /users` - Get all users
 - `GET /users/:id` - Get user by ID
-- `POST /users` - Create new user (Admin only)
+- `POST /users` - Create new user
 - `PATCH /users/:id` - Update user
-- `DELETE /users/:id` - Delete user (Admin only)
+- `DELETE /users/:id` - Delete user
 
 ### Notifications
 
@@ -51,37 +55,39 @@ NestJS-based backend for the File Uploader & Management System.
 
 ### Logs
 
+(Admin only)
+
 - `GET /logs` - Get system logs (Admin only)
 
 ## Project Structure
 
-```
 backend/
-├── prisma/                   # Prisma schema and migrations
-│   └── schema.prisma         # Database schema definition
-├── src/                      # Source code
-│   ├── main.ts               # Application entry point
-│   ├── app.module.ts         # Main application module
-│   ├── auth/                 # Authentication module
-│   │   ├── dto/              # Data transfer objects
-│   │   ├── guards/           # Authorization guards
-│   │   └── strategies/       # JWT strategies
-│   ├── file/                 # File handling module
-│   │   ├── dto/              # File DTOs
-│   │   ├── processors/       # File processing logic
-│   │   └── file.service.ts   # File operations
-│   ├── user/                 # User management module
-│   ├── notification/         # Notification module
-│   │   └── gateway/          # WebSocket gateway
-│   ├── log/                  # Logging module
-│   └── common/               # Shared utilities
-│       ├── decorators/       # Custom decorators
-│       ├── filters/          # Exception filters
-│       ├── guards/           # Common guards
-│       ├── interceptors/     # Request/response interceptors
-│       └── utils/            # Utility functions
-└── test/                     # End-to-end and unit tests
-```
+├── prisma/ # Prisma schema and migrations
+│ └── schema.prisma # Database schema definition
+├── src/ # Source code
+│ ├── main.ts # Application entry point
+│ ├── app.module.ts # Main application module
+│ ├── auth/ # Authentication module
+│ │ ├── dto/ # Data transfer objects
+│ │ ├── guards/ # Authorization guards
+│ │ └── strategies/ # JWT strategies
+│ ├── file/ # File handling module
+│ │ ├── dto/ # File DTOs
+│ │ ├── processors/ # File processing logic
+│ │ └── file.service.ts # File operations
+│ ├── user/ # User management module
+│ ├── notification/ # Notification module
+│ │ └── gateway/ # WebSocket gateway
+│ ├── log/ # Logging module
+│ └── common/ # Shared utilities
+│ ├── decorators/ # Custom decorators
+│ ├── filters/ # Exception filters
+│ ├── guards/ # Common guards
+│ ├── interceptors/ # Request/response interceptors
+│ └── utils/ # Utility functions
+└── test/ # End-to-end and unit tests
+
+````
 
 ## Getting Started
 
@@ -97,7 +103,7 @@ backend/
 
    ```bash
    cd backend
-   ```
+````
 
 2. Install dependencies:
 

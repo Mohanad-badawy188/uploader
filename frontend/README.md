@@ -13,7 +13,7 @@ Next.js-based frontend for the File Uploader & Management System.
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (React)
+- **Framework**: Next.js 15 (React)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Components**: Shadcn UI
