@@ -227,7 +227,7 @@ export class FileService {
       this.prisma.file.count({ where }),
       this.prisma.file.count({ where: { ...where, status: 'complete' } }),
       this.prisma.file.count({ where: { ...where, status: 'error' } }),
-      this.prisma.file.count({ where: { ...where, status: 'processing' } }),
+      this.prisma.file.count({ where: { ...where, status: 'pending' } }),
     ]);
 
     return {
