@@ -17,7 +17,7 @@ import { LoggingModule } from './logging/logging.module';
     LoggingModule,
     PrismaModule,
     BullModule.forRoot({
-      redis: {
+      redis: process.env.REDIS_URL ?? {
         host: 'localhost',
         port: 6379,
       },
