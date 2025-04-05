@@ -157,9 +157,10 @@ export class FileService {
     };
   }
 
-  async getFileById(fileId: string, userId: number) {
+  async getFileById(fileId: string, userId: number, role: string) {
+    // Query for file, considering admin role
     const file = await this.prisma.file.findFirst({
-      where: { id: fileId, userId },
+      where: role === 'ADMIN' ? { id: fileId } : { id: fileId, userId },
       include: {
         user: {
           select: { id: true, email: true, name: true },
@@ -180,9 +181,9 @@ export class FileService {
     return filesWithFullThumbnailUrl;
   }
 
-  async deleteFile(fileId: string, userId: number) {
-    const file = await this.prisma.file.findUnique({
-      where: { id: fileId, userId },
+  async deleteFile(fileId: string, userId: number, role: string) {
+    const file = await this.prisma.file.findFirst({
+      where: role === 'ADMIN' ? { id: fileId } : { id: fileId, userId },
     });
 
     if (!file) {
@@ -197,15 +198,16 @@ export class FileService {
     } catch (err) {
       console.error('⚠️ Error deleting file(s) from disk:', err);
     }
+
+    await this.prisma.file.delete({
+      where: { id: file.id },
+    });
+
     await this.userActivityService.log(
       userId,
       'DELETE_FILE',
       `Deleted ${file.originalName}`,
     );
-    // Delete DB record
-    await this.prisma.file.delete({
-      where: { id: file.id },
-    });
 
     return { message: 'File deleted successfully' };
   }

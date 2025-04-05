@@ -83,12 +83,12 @@ export class FileController {
 
   @Get(':id')
   async getOne(@Req() req: RequestWithUser, @Param('id') id: string) {
-    return this.fileService.getFileById(id, req.user.id);
+    return this.fileService.getFileById(id, req.user.id, req.user.role);
   }
 
   @Delete(':id')
   async DeleteFile(@Req() req: RequestWithUser, @Param('id') id: string) {
     const user = req.user;
-    return this.fileService.deleteFile(id, user.id);
+    return this.fileService.deleteFile(id, user.id, user.role);
   }
 }
