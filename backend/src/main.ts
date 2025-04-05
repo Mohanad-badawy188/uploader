@@ -10,6 +10,7 @@ import { Queue } from 'bull';
 import { getQueueToken } from '@nestjs/bull';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { resolve } from 'path';
+import { seed } from 'prisma/seed';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -44,6 +45,7 @@ async function bootstrap() {
 
   app.use('/admin/queues', expressAdapter.getRouter());
   // 🔥 BULL BOARD SETUP END
+  await seed();
 
   await app.listen(process.env.PORT ?? 3000);
 }
