@@ -53,15 +53,21 @@ function Home() {
   const [page, setPage] = useState(1);
 
   const router = useRouter();
-  const { data, isLoading: statsLoading } = useSWR<FileStatsResponse>(
+  const {
+    data,
+    isLoading: statsLoading,
+    mutate: mutateStats,
+  } = useSWR<FileStatsResponse>(
     fileType === "all"
       ? "/files/userFileStats"
       : `/files/userFileStats?type=${fileType}`,
     fetcher
   );
-  const { data: uploadData, isLoading: trendsLoading } = useSWR<
-    UploadTrendItem[]
-  >("/files/upload-trends", fetcher);
+  const {
+    data: uploadData,
+    isLoading: trendsLoading,
+    mutate: mutateTrends,
+  } = useSWR<UploadTrendItem[]>("/files/upload-trends", fetcher);
   const {
     files,
     isLoading: TableLoading,
@@ -76,6 +82,14 @@ function Home() {
 
     type: fileType === "all" ? undefined : fileType,
   });
+
+  // Function to refresh all data on the dashboard
+  const refreshAllData = () => {
+    mutateStats();
+    mutateTrends();
+    refreshFiles();
+  };
+
   const handleSorting = (sorting: "asc" | "desc") => {
     setSorting(sorting);
   };
@@ -159,7 +173,7 @@ function Home() {
                 files={files}
                 handleSorting={handleSorting}
                 sorting={sorting}
-                refreshFiles={refreshFiles}
+                refreshFiles={refreshAllData}
               />
               <CustomPagination
                 count={total ?? 0}

@@ -29,13 +29,22 @@ export interface UsersWithStatsResponse {
 function UsersPage() {
   const [page, setPage] = useState(1);
 
-  const { data: statsData, isLoading: statsLoading } =
-    useSWR<FileStatsResponse>("/files/userFileStats", fetcher);
+  const {
+    data: statsData,
+    isLoading: statsLoading,
+    mutate: mutateStats,
+  } = useSWR<FileStatsResponse>("/files/userFileStats", fetcher);
   const {
     data: users,
-    mutate,
+    mutate: mutateUsers,
     isLoading: usersLoading,
   } = useSWR<UsersWithStatsResponse>(`/users?page=${page}`, fetcher);
+
+  // Function to refresh all data
+  const refreshAllData = () => {
+    mutateUsers();
+    mutateStats();
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -53,7 +62,7 @@ function UsersPage() {
           />
           <UsersTable
             users={users?.data}
-            refetch={mutate}
+            refetch={refreshAllData}
             isLoading={usersLoading}
           />
           <CustomPagination
