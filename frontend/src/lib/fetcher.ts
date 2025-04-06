@@ -1,17 +1,12 @@
-// src/lib/fetcher.ts
-
 import { api } from "./api";
 
-// Global controller for canceling specific types of requests
 const fileListControllers = {
   current: null as AbortController | null,
 };
 
-// Regular URL-based controllers for non-file requests
 const abortControllers = new Map<string, AbortController>();
 
 export const fetcher = <T>(url: string, init?: RequestInit) => {
-  // Special handling for file list requests
   if (url.startsWith("/files?") || url === "/files") {
     // Cancel any existing file list request
     if (fileListControllers.current) {
@@ -23,7 +18,6 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
       }
     }
 
-    // Create a new controller for this file list request
     fileListControllers.current = new AbortController();
     const controller = fileListControllers.current;
     console.log(`New file list request started: ${url}`);
@@ -32,12 +26,10 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
       .get<T>(url, {
         signal: controller.signal,
         withCredentials: true,
-        // Add a timestamp to prevent browser caching
         params: { _t: new Date().getTime() },
       })
       .then((res) => {
         console.log(`File list request completed: ${url}`);
-        // Only clear if this is still the current controller
         if (fileListControllers.current === controller) {
           fileListControllers.current = null;
         }
@@ -57,7 +49,6 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
       });
   }
 
-  // Regular handling for all other requests
   if (abortControllers.has(url)) {
     try {
       const controller = abortControllers.get(url);
@@ -70,7 +61,6 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
     }
   }
 
-  // Create a new abort controller
   const controller = new AbortController();
   abortControllers.set(url, controller);
   console.log(`New request started for: ${url}`);
@@ -78,7 +68,6 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
   return api
     .get<T>(url, {
       signal: controller.signal,
-      // Add a timestamp to prevent browser caching
       params: { _t: new Date().getTime() },
     })
     .then((res) => {
@@ -89,7 +78,6 @@ export const fetcher = <T>(url: string, init?: RequestInit) => {
     .catch((error) => {
       if (error.name === "CanceledError" || error.name === "AbortError") {
         console.log(`Request was aborted for: ${url}`);
-        // Don't propagate canceled request errors
         throw new Error("AbortError");
       } else {
         console.error(`Request error for ${url}:`, error);
